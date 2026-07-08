@@ -19,10 +19,30 @@ pipeline {
         }
 
         stage('Ejecutar Pruebas') {
-            steps {
-                sh 'npm test'
-            }
-        }
+    steps {
+        sh '''
+            echo "=== Versión de Node ==="
+            node -v
+
+            echo "=== Versión de npm ==="
+            npm -v
+
+            echo "=== Contenido de node_modules/.bin ==="
+            ls -la node_modules/.bin
+
+            echo "=== Permisos de Jest ==="
+            ls -l node_modules/.bin/jest
+
+            chmod +x node_modules/.bin/jest || true
+
+            echo "=== Versión de Jest ==="
+            npx jest --version
+
+            echo "=== Ejecutando pruebas ==="
+            npx jest
+        '''
+    }
+}
 
         stage('Construir Imagen Docker') {
             steps {
